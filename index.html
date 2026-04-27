@@ -641,4 +641,47 @@ render=function(){
 var sv=sessionStorage.getItem('vcu');
 if(sv&&gU()[sv]){CU=sv;enterApp();initFirebase()}else{renderLogin();initFirebase()}
 </script>
+  type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCRe7bEPWCJswoH2kHJwvLP7bAArLTAf8o",
+  authDomain: "icta-eg.firebaseapp.com",
+  databaseURL: "https://icta-eg-default-rtdb.firebaseio.com",
+  projectId: "icta-eg",
+  storageBucket: "icta-eg.firebasestorage.app",
+  messagingSenderId: "980054726805",
+  appId: "1:980054726805:web:93195405af62535a71e39c"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// 🟢 Auto Save
+function saveData(data){
+  set(ref(db, 'sharedData'), data);
+}
+
+// 🟢 Load Data
+function loadData(callback){
+  onValue(ref(db, 'sharedData'), (snapshot)=>{
+    callback(snapshot.val());
+  });
+}
+
+// مثال بسيط (جرب بيه)
+window.addEventListener("input", ()=>{
+  const data = {
+    html: document.body.innerHTML
+  };
+  saveData(data);
+});
+
+loadData((data)=>{
+  if(data && data.html){
+    document.body.innerHTML = data.html;
+  }
+});
+</script>
 </body></html>
